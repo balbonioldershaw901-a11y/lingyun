@@ -1,0 +1,15 @@
+# lingyun · 图册
+#
+# 整站都是给人看的页面，所以不封锁路径；只排掉三处「不是内容、也不该被检索」的东西：
+#   /desk/tools/ 是构建期脚本，/desk/README.md 与 /README.md 是给接手人看的说明
+#   （README.md 放在站点根是为了 GitHub 仓库首页能显示它，它的读者在 GitHub，不在站点）。
+# 刻意**不**封锁 /desk/src/ —— 首页与场景页靠它渲染（ES 模块），
+# 封掉会让会执行 JS 的爬虫拿到一个不带三维的首页。
+User-agent: *
+Allow: /
+Disallow: /desk/tools/
+Disallow: /desk/README.md
+Disallow: /README.md
+
+# 域名由 set-domain.cjs 写入（robots.txt 里必须是绝对地址）
+Sitemap: https://balbonioldershaw901-a11y.github.io/lingyun/sitemap.xml

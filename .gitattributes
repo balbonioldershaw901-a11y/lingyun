@@ -1,0 +1,12 @@
+# 行尾统一成 LF。没有这一行的后果：Windows 上提交会把 HTML/CSS/JS 变成 CRLF，
+# 而仓库里现在存的是 LF —— 于是「只改了一个字」的提交会在 diff 里显示整个文件都变了，
+# 真正的改动被淹没。图片和字体显式标成二进制，免得被当文本去比较。
+* text=auto eol=lf
+
+*.webp binary
+*.png binary
+*.ttf  binary
+*.woff binary
+*.woff2 binary
+*.jpg  binary
+*.ico  binary

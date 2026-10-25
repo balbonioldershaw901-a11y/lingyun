@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>lingyun · 林学 / 遥感与生态模型</title>
+<meta name="description" content="林学专业学生，方向是遥感与生态模型。首页是一张用代码搭出来的三维书桌：往下滑，镜头会带你看过去。">
+<!-- 分享卡片与规范地址。og:url / og:image / canonical 必须是**绝对地址**（微信与 QQ 只认绝对地址），
+     所以这里先留 __ORIGIN__ 占位符；域名定下来之后跑一次：node set-domain.cjs 你的域名 -->
+<link rel="canonical" href="https://balbonioldershaw901-a11y.github.io/lingyun/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="lingyun · 图册">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="lingyun · 把一片林子读成一张图">
+<meta property="og:description" content="林学专业学生，方向是遥感与生态模型。首页是一张用代码搭出来的三维书桌：往下滑，镜头会带你看过去。">
+<meta property="og:url" content="https://balbonioldershaw901-a11y.github.io/lingyun/">
+<meta property="og:image" content="https://balbonioldershaw901-a11y.github.io/lingyun/assets/og-cover.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="atlas.css">
+<link rel="stylesheet" href="scroll.css">
+</head>
+<body class="home">
+
+<!-- 全屏固定的三维舞台。canvas 不吃指针事件，手势一律交给页面滚动 -->
+<div class="gl-wrap" id="gl-wrap">
+  <canvas id="gl" role="img"
+          aria-label="一张书桌的三维静物：围棋盘与黑白子、毛笔、砚台、宣纸、太湖石"></canvas>
+</div>
+<p class="gl-note" id="gl-note" hidden>这台设备没有可用的 WebGL2，三维静物没有画出来；下面的文字照常可读。</p>
+
+<header class="topbar home-top" id="topbar">
+  <div class="in wide">
+    <a class="brand" href="index.html"><i>LY</i>lingyun</a>
+    <!-- 全站统一导航（四项，顺序与文字与其他页一致）。
+         刻意写成带 class 的 nav：build-v7.cjs 里那句 <nav>…</nav> 的定点注入
+         只匹配无属性的 <nav>，重新构建时不会把别页的导航灌进主页 -->
+    <nav class="home-nav">
+      <a href="index.html" aria-current="page">首页</a>
+      <a href="projects/index.html">作品</a>
+      <a href="terrain.html">地形图</a>
+      <a href="resume.html">档案</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ==================================================== 01 · 三维静物 -->
+  <section class="beat hero" id="top">
+    <div class="hero-in wide">
+      <p class="eyebrow">林学 · 遥感与生态模型</p>
+      <h1 class="h1">把一片林子<br>读成一张图</h1>
+      <p class="lede">我在读林学，方向是遥感与生态模型。这张桌子是我用代码搭出来的 —— 往下滑，镜头会带你看过去。</p>
+      <p class="scroll-cue"><span class="bar"></span>往下滑</p>
+    </div>
+  </section>
+
+  <div class="rail">
+
+    <!-- ==================================================== 02 · 自我介绍 -->
+    <section class="beat" id="about">
+      <div class="beat-in wide">
+        <article class="card" data-rise>
+          <p class="eyebrow">关于</p>
+          <h2 class="h2">几句话</h2>
+          <div class="prose">
+            <p>我在读林学，方向是遥感与生态模型。说人话就是：用卫星和无人机拍到的影像看一片林子长成什么样，
+               再把它写成能算的模型，看看换一年天气会变成什么样。</p>
+            <p>动手做过冬小麦的生长模拟，也做过植被遥感指标的空间变化分析。也上过山 ——
+               在木札岭做过森林生态实习，拉样方、认树种、量树高。</p>
+            <p>不写代码的时候写字，也下棋。写字让我慢下来，下棋让我想清楚再落子。</p>
+            <p>毕业之后想做的事，是和林子、山地、数据都沾边的那一种。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ==================================================== 03 · 作品 -->
+    <section class="beat" id="works">
+      <div class="beat-in wide right">
+        <article class="card" data-rise>
+          <p class="eyebrow">作品</p>
+          <h2 class="h2">做过的事</h2>
+          <ul class="works">
+            <li class="t-model">
+              <a href="projects/wofost.html">
+                <span class="tt">基于 WOFOST 的冬小麦生长模拟</span>
+                <span class="dd">用作物生长模型把冬小麦从播种到成熟跑一遍，看不同天气年份下产量差在哪里。</span>
+              </a>
+            </li>
+            <li class="t-remote">
+              <a href="projects/remote.html">
+                <span class="tt">植被遥感指标与空间变化分析</span>
+                <span class="dd">从遥感影像里算出植被指标，看同一片区域几年之间空间上都变了什么。</span>
+              </a>
+            </li>
+            <li class="t-field">
+              <a href="projects/field.html">
+                <span class="tt">木札岭森林生态实习记录</span>
+                <span class="dd">在山里做森林生态实习的野外记录：样地、样方、树种与地形。</span>
+              </a>
+            </li>
+            <li class="t-file">
+              <a href="terrain.html">
+                <span class="tt">木札岭样区三维地形图</span>
+                <span class="dd">用真实的 SRTM 高程数据画一张三维地形图，能转、能读数。</span>
+              </a>
+            </li>
+          </ul>
+          <!-- 作品区的出口：原来四条并列、点进去之后只有浏览器后退键，没有「全部作品」这一层。
+               现在四条各进各的详情页，出口在这一行，详情页的页脚也能回到这里。 -->
+          <p class="more"><a href="projects/index.html">全部作品 ↗</a></p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ==================================================== 04 · 联系 -->
+    <section class="beat" id="contact">
+      <div class="beat-in wide">
+        <article class="card" data-rise>
+          <p class="eyebrow">联系</p>
+          <h2 class="h2">找我</h2>
+          <div class="prose">
+            <p>邮箱和电话还没定下来放哪个，先写「待补」。想看细节，档案那页更全。</p>
+          </div>
+          <dl class="contact">
+            <dt>邮箱</dt><dd>待补</dd>
+            <dt>电话</dt><dd>待补</dd>
+            <dt>常用账号</dt><dd>待补</dd>
+          </dl>
+          <p class="dl">
+            <a href="resume.html">档案</a> ·
+            <a href="projects/index.html">全部作品</a>
+          </p>
+        </article>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- 底边原来有一条两行的说明带（三维静物怎么生成、SRTM 从哪来），压在画面最下沿。
+     读者第一眼看到的是两行小字盖在静物上，画面被切掉一块；这两句在作品页和档案页的
+     页脚各有一份，主页不必重复。整块删除，主页以「联系」这一屏收尾，底边只留三维本身。 -->
+
+<div class="progress-top" id="rail-progress" aria-hidden="true"><i></i></div>
+
+<!-- 滑动驱动镜头的那一半。只读引用 desk/src/*，不动那边的任何文件 -->
+<script type="module" src="scroll-scene.js"></script>
+
+</body>
+</html>

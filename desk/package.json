@@ -1,0 +1,10 @@
+{
+  "name": "webgl2-wenren-desk",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Raw WebGL2 procedural geometry recipes for a scholar's-desk still life (no libs, no models, no CDN).",
+  "scripts": {
+    "budget": "node tools/budget.mjs"
+  }
+}

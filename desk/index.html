@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>文人书桌静物 · 手写 WebGL2 几何</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0e0d0c; color: #cfc7bb;
+    font: 13px/1.6 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; }
+  /* 关键：canvas 上 touch-action:none + overscroll-behavior:none，
+     否则触屏拖拽会同时滚动/下拉刷新页面 */
+  #gl { display: block; width: 100vw; height: 100vh; touch-action: none; }
+  #hud { position: fixed; left: 12px; bottom: 10px; pointer-events: none;
+    opacity: .78; font-variant-numeric: tabular-nums; }
+  #tip { position: fixed; left: 12px; top: 10px; pointer-events: none;
+    opacity: .55; max-width: 46ch; }
+  /* 盘上是哪一局棋的说明：跟着 #tip 一起，不另占位置（文案来自 src/geom/kifu.js） */
+  #kifu { display: block; margin-top: 5px; opacity: .92; }
+  #tier { position: fixed; right: 12px; top: 10px; }
+  button { background: #1c1a18; color: #cfc7bb; border: 1px solid #3a3530;
+    border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+  button:hover { border-color: #6b6055; }
+  /* 嵌入模式：?embed=1 时把 HUD/提示/按钮藏掉、背景透明，
+     让静物作为宿主页面的全屏背景，而不是一个独立页面 */
+  html.embed body { background: transparent; }
+  html.embed #tip, html.embed #tier, html.embed #hud { display: none; }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="tip">拖动旋转（球面轨道 + 阻尼）· 滚轮/双指缩放 · 右键或 Shift 拖动平移 · 键盘 1/2 切档
+  <span id="kifu"></span></div>
+<div id="tier"><button id="btn">切到移动端档</button></div>
+<div id="hud">载入中…</div>
+<script>
+  /* 在模块之前判定嵌入模式，避免闪一下 HUD */
+  if (location.search.indexOf('embed') >= 0) document.documentElement.classList.add('embed');
+</script>
+<script type="module" src="./src/main.js"></script>
+<script>
+  // 只做 UI 胶水；几何/着色器都在模块里
+  window.addEventListener('load', () => {
+    const btn = document.getElementById('btn');
+    let tier = 'desktop';
+    const sync = () => { btn.textContent = tier === 'desktop' ? '切到移动端档' : '切到桌面级档'; };
+    btn.addEventListener('click', () => {
+      tier = tier === 'desktop' ? 'mobile' : 'desktop';
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: tier === 'desktop' ? '1' : '2' }));
+      sync();
+    });
+    sync();
+  });
+</script>
+</body>
+</html>

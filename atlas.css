@@ -1,0 +1,652 @@
+/* ============================================================================
+   lingyun · PERSONAL ATLAS — V7 版式（atlas.css）
+   全站唯一的样式来源：首页图幅、projects/*、resume 都链这一份。
+   ----------------------------------------------------------------------------
+   读者是招聘的人，判断只有两条：一眼觉得新奇、三分钟知道我是个什么人。
+   所以目标是「清楚、安静、不用力」——层级一眼可辨，元数据退成旁注，装饰不抢戏。
+   下面每一条都尽量是可测的：
+     · 正文 17px / 行高 1.85 / 行长 34em（= 34 汉字；汉字 1:1 方块，1em 就是 1 个字）
+     · 字号只留 7 档 + 1 个展示级：11 / 12.5 / 13 / 17 / 18 / 18.5 / 21，h1 clamp 到 42
+       （17×1.2⁵ ≈ 42，h1 也落在同一个模数上）。16 / 16.5 / 13.33 这些中间字号已清掉
+     · 字号越小、字距越大：11px +.06em / 12.5px +.04em / 13px +.03em / ≥17px ≈0
+       例外只有一条：来源、页脚、表注这类**长行小字**用 +.01em ——
+       字距加成是给短标签的，压在长行上会散架
+     · 间距只有一套尺度：4 / 8 / 12 / 20 / 32 / 56。另允许 1–2px 的光学微调
+       （描边贴合、基线校正），它不参与节奏，也不算尺度外的随意值
+     · 线只有两种宽度：1px（所有细线）与 2px（图廓外框、三线表上下框、色标/图例符号线）。
+       1.5px 已全部清掉。1px 里再分两种颜色：--line 做分隔、--rule 做强调、--ink 做结构
+     · 对比度：可见文字只用 --ink / --ink-2 / --muted（纸面上 5.9:1 起；压在
+       scroll.css 那种 90% 不透明卡片上最暗也有 4.8:1，实测全站最低 4.8）。
+       **浅色不能当字用**：--faint(#9b9c8d, 2.53:1) 这类值在 V6 被用在 44 处可见文字上，
+       连「不是实测样本」这句免责声明都是 2.5:1 —— 最该被看清的句子反而最看不见。
+       教训一句话：浅色只做线；要淡就淡到 --muted 为止，别再往下调。
+       （--muted 原来是 #6d7062，在纸面上 4.61:1 刚好过线，可一旦压在卡片上就掉到
+        3.73:1 —— "刚好达标"不是达标，得按最暗的那层底留余量。）
+   ========================================================================== */
+
+:root{
+  /* 纸与墨 */
+  --paper:#f6f4ee;
+  --paper-2:#efece3;
+  --paper-3:#e7e3d8;
+  --ink:#14150f;
+  --ink-2:#3a3b32;                     /* 11.2:1 */
+  --muted:#5c5f52;                     /* 5.9:1（纸面）；压在半透明卡片最暗处 4.8:1 —— 允许的最淡文字色 */
+  --accent:#a8432b;                    /* 5.45:1 */
+
+  /* 线：浅色只做线，不做字 */
+  --line:#ded9cc;                      /* 分隔：章节上边线、图幅内框、控件分隔 */
+  --rule:#c9c5b6;                      /* 强调：链接下划线、chip 边框 */
+
+  /* 字体栈：正文全部系统已有，不引外部字体、不引 CDN。
+     V6 的首位是 'Journal Serif' —— 那是 V6 构建期给 Noto Serif SC 子集起的
+     @font-face 别名（见 V6 的 build-v6.cjs）。V7 既没有那个字体文件、
+     也没有 @font-face，这个名字永远不可能命中，实际渲染的一直是系统 Noto Serif SC。
+     名字和文件对不上就是缺陷，所以这里直接去掉别名，首位写真名。
+     --brush 是站点自带的本地字体（见下面的 @font-face），只给书法落款那一行用。 */
+  --serif:'Noto Serif SC','Songti SC',serif;
+  --sans:'Inter','PingFang SC','Microsoft YaHei',sans-serif;
+  --mono:ui-monospace,'SFMono-Regular',Consolas,monospace;
+  --brush:'Ma Shan Zheng',var(--serif);
+
+  /* 字号（1.2 模数） */
+  --fs-micro:11px;
+  --fs-meta:12.5px;
+  --fs-fig:13px;
+  --fs-body:17px;
+  --fs-h3:18px;
+  --fs-lede:18.5px;
+  --fs-h2:21px;
+  --fs-h1:clamp(28px,3.2vw,42px);
+
+  /* 行高：四档，够用且分得清 */
+  --lh-display:1.16;                   /* 展示级标题 */
+  --lh-tight:1.45;                     /* h2 / h3 */
+  --lh-fig:1.65;                       /* 图注、表注、元数据、长行小字 */
+  --lh-body:1.85;                      /* 正文 */
+  --lh-ui:1;                           /* 单行控件 */
+
+  /* 字距：按字号分档 */
+  --track-micro:.06em;
+  --track-meta:.04em;
+  --track-fig:.03em;
+  --track-long:.01em;                  /* 长行小字例外 */
+  --track-tight:-.01em;
+
+  /* 间距尺度：只有这六个值 */
+  --sp-1:4px;
+  --sp-2:8px;
+  --sp-3:12px;
+  --sp-4:20px;
+  --sp-5:32px;
+  --sp-6:56px;
+
+  /* 线宽：只有这两种 */
+  --lw-hair:1px;
+  --lw-rule:2px;
+
+  --measure:34em;
+
+  /* 三轴分类的工作类型色标（只做 3px 边条与下划线，文字仍用色标自身色，均已 ≥4.5:1） */
+  --dom-field:#4a5140;
+  --dom-remote:#39566b;
+  --dom-model:#a8432b;
+  --dom-method:#5c5f52;
+}
+
+/* ---------------------------------------------------------------- 本地字体 */
+/* 站点自带的唯一一个字体文件：Ma Shan Zheng（毛笔楷书，SIL OFL 1.1）的 13 字子集，
+   来自 V6 的 prepare-font-v6.cjs，按真实字形轮廓取子集，落地在 assets/ 下，不引站外。
+   名字用字体自己的内部族名（读 name 表得到：Ma Shan Zheng），不是另起的别名 ——
+   栈里的名字必须和真实文件对得上。用途只有一个：档案页书法那条落款（.calli-sign）。
+   毛笔字体当正文不可读，所以不参与 --serif / --sans。
+   font-display:swap —— 字体没到时先用正文衬线顶位，不阻塞首屏文字。 */
+@font-face{
+  font-family:'Ma Shan Zheng';
+  src:url('assets/brush-calligraphy.ttf') format('truetype');
+  font-weight:400;font-style:normal;font-display:swap;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--serif);font-size:var(--fs-body);line-height:var(--lh-body);
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;
+}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--ink);text-decoration:none;border-bottom:var(--lw-hair) solid var(--rule)}
+a:hover{border-bottom-color:var(--ink)}
+h1,h2,h3{margin:0;font-weight:400;line-height:var(--lh-tight)}
+p{margin:0}
+
+/* 控件不吃浏览器默认样式：默认按钮字是 13.33px 的 Arial，属于尺度外的第四种字号 */
+button,input,select,textarea{
+  font-family:var(--mono);font-size:var(--fs-meta);line-height:var(--lh-ui);
+  letter-spacing:var(--track-meta);color:var(--ink-2);
+}
+button{
+  appearance:none;background:transparent;
+  border:var(--lw-hair) solid var(--line);
+  padding:var(--sp-1) var(--sp-2);cursor:pointer;
+}
+button:hover{border-color:var(--ink-2)}
+input[type=range]{accent-color:var(--accent);vertical-align:middle}
+
+/* ---------------------------------------------------------------- 外壳 */
+.topbar{
+  position:sticky;top:0;z-index:30;background:rgba(246,244,238,.94);
+  backdrop-filter:blur(6px);border-bottom:var(--lw-hair) solid var(--line);
+}
+.topbar .in{
+  display:flex;align-items:baseline;gap:clamp(12px,2.4vw,32px);
+  padding:var(--sp-3) clamp(20px,4vw,32px);
+}
+.brand{font-family:var(--serif);font-size:var(--fs-body);border:0}
+.brand i{
+  display:inline-grid;place-items:center;width:var(--sp-4);height:var(--sp-4);
+  border:var(--lw-hair) solid var(--ink);
+  font:var(--fs-micro)/var(--lh-ui) var(--mono);font-style:normal;letter-spacing:var(--track-micro);
+  margin-right:var(--sp-2);vertical-align:-4px;
+}
+.topbar nav{display:flex;gap:clamp(12px,2vw,20px);margin-left:auto;flex-wrap:wrap}
+.topbar nav a{
+  border:0;font:var(--fs-meta)/var(--lh-ui) var(--mono);letter-spacing:var(--track-meta);
+  color:var(--muted);padding:var(--sp-1) 0;
+}
+.topbar nav a[aria-current]{color:var(--ink);border-bottom:var(--lw-hair) solid var(--ink)}
+
+.shell{padding:0 clamp(20px,4vw,32px)}
+.wide{max-width:1560px;margin:0 auto}
+.col{max-width:var(--measure)}
+
+/* ---------------------------------------------------------------- 图幅 */
+/* 图廓：外线 2px、内线 1px、间距 8px。双线唯一的作用是给"图廓间注记带"留位；
+   图面必须顶到内图廓，中间留缝就立刻变 PPT。
+   规范里外线是内线的约 3 倍（0.30–0.50mm 对 0.10–0.15mm）；屏幕 1 倍像素密度下
+   0.3mm ≈ 1.1px，取不到这个比例，所以这里取 2:1 并如实记下这个偏差。 */
+.plate{
+  position:relative;margin:clamp(12px,2vw,20px) 0 0;
+  border:var(--lw-rule) solid var(--ink);padding:var(--sp-2);
+}
+.plate .inner{border:var(--lw-hair) solid var(--ink-2);position:relative;overflow:hidden;background:var(--paper-2)}
+.stage{position:relative;width:100%;height:min(72vh,760px);min-height:340px}
+.stage canvas{width:100%;height:100%;display:block;cursor:crosshair}
+.stage img.fallback{width:100%;height:100%;object-fit:cover}
+
+/* 图廓间注记：四角真实坐标 */
+.corner{
+  position:absolute;font:var(--fs-micro)/var(--lh-fig) var(--mono);letter-spacing:var(--track-micro);
+  color:var(--ink-2);background:rgba(246,244,238,.86);padding:2px var(--sp-1);pointer-events:none;
+}
+.corner.nw{top:var(--sp-2);left:var(--sp-2)}
+.corner.ne{top:var(--sp-2);right:var(--sp-2)}
+.corner.sw{bottom:var(--sp-2);left:var(--sp-2)}
+.corner.se{bottom:var(--sp-2);right:var(--sp-2)}
+
+/* 指北针：方向由相机偏航角实时算。SVG 里的 10px 文字也拉回字号档位 */
+.compass{
+  position:absolute;top:40px;right:var(--sp-2);width:52px;height:52px;pointer-events:none;
+  color:var(--ink-2);
+}
+.compass .rose{transform-origin:50% 50%;transition:transform .12s linear}
+.compass text{font:var(--fs-micro)/var(--lh-ui) var(--mono);letter-spacing:var(--track-micro);fill:var(--ink-2)}
+.compass polygon[stroke]{stroke:var(--muted)}
+
+/* 比例尺：分段图解式 + 数字式。值是**量出来的**，不是按视角估的。
+   放到左上角坐标注记的下方；放底边会和左下角图例抢位置——两个带底色的框叠一起就是互相压字。 */
+.scalebar{
+  position:absolute;top:40px;left:var(--sp-2);pointer-events:none;
+  color:var(--ink-2);font:var(--fs-micro)/var(--lh-fig) var(--mono);
+  background:rgba(246,244,238,.9);padding:var(--sp-1) var(--sp-2);
+}
+.scalebar .bar{
+  display:flex;height:var(--sp-2);border:var(--lw-hair) solid var(--ink-2);margin-bottom:var(--sp-1);
+  background:var(--paper);
+}
+.scalebar .bar i{display:block;height:100%}
+.scalebar .bar i:nth-child(odd){background:var(--ink-2)}
+.scalebar .lbl{display:flex;justify-content:space-between;gap:var(--sp-2)}
+
+/* 光标读数：经纬度/高程/坡度/坡向 —— 这一条就是"至少一次真实量测能力"。
+   底边让开 32px：底图左下/右下的角注就压在 8–30px 这条带子里，
+   盒子贴底会正好盖住角注（原来就是）。 */
+.readout{
+  position:absolute;bottom:var(--sp-6);right:var(--sp-2);min-width:240px;
+  border:var(--lw-hair) solid var(--ink-2);background:rgba(246,244,238,.95);
+  padding:var(--sp-2) var(--sp-3);
+}
+.readout dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:var(--sp-1) var(--sp-3)}
+.readout dt{font:var(--fs-micro)/var(--lh-fig) var(--mono);letter-spacing:var(--track-micro);color:var(--muted)}
+.readout dd{margin:0;font:var(--fs-meta)/var(--lh-fig) var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
+.readout .hint{font:var(--fs-micro)/var(--lh-fig) var(--sans);letter-spacing:var(--track-long);color:var(--muted);margin-top:var(--sp-2)}
+
+/* 图层开关 */
+.layers{
+  position:absolute;top:var(--sp-2);left:50%;transform:translateX(-50%);
+  display:flex;gap:0;border:var(--lw-hair) solid var(--ink-2);background:rgba(246,244,238,.94);
+}
+.layers button{
+  appearance:none;background:none;border:0;border-right:var(--lw-hair) solid var(--line);
+  font:var(--fs-meta)/var(--lh-ui) var(--mono);letter-spacing:var(--track-meta);color:var(--muted);
+  padding:var(--sp-2) var(--sp-3);cursor:pointer;
+}
+.layers button:last-child{border-right:0}
+.layers button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+/* 图例：分组排列、色块 14×10、文字左对齐。同样让开底边 32px 的角注带 */
+.legend{
+  position:absolute;bottom:var(--sp-6);left:var(--sp-2);border:var(--lw-hair) solid var(--ink-2);
+  background:rgba(246,244,238,.95);padding:var(--sp-2) var(--sp-3);max-width:240px;
+}
+.legend h4{margin:0 0 var(--sp-2);font:var(--fs-micro)/var(--lh-fig) var(--mono);letter-spacing:var(--track-micro);color:var(--muted)}
+.legend ul{list-style:none;margin:0;padding:0;display:grid;gap:var(--sp-1)}
+.legend li{display:flex;align-items:center;gap:var(--sp-2);font:var(--fs-meta)/var(--lh-fig) var(--mono);color:var(--ink-2)}
+.legend i{width:14px;height:10px;display:block;border:var(--lw-hair) solid var(--rule);flex:0 0 auto}
+.legend .ln{width:14px;height:0;border-top:var(--lw-rule) solid var(--ink-2);flex:0 0 auto}
+
+/* 图名与来源：位置固定，字号比正文小两级 */
+.plate-title{
+  display:flex;justify-content:space-between;gap:clamp(12px,2vw,32px);
+  align-items:baseline;flex-wrap:wrap;margin-top:var(--sp-2);
+}
+.plate-title .no{font:var(--fs-meta)/var(--lh-fig) var(--mono);letter-spacing:var(--track-meta);color:var(--muted)}
+.plate-title h2{font-size:var(--fs-h2)}
+.plate-src{
+  margin-top:var(--sp-2);font:var(--fs-micro)/var(--lh-fig) var(--mono);color:var(--muted);
+  letter-spacing:var(--track-long);max-width:none;
+}
+
+/* ---------------------------------------------------------------- 正文 */
+.prose{font-family:var(--serif);font-size:var(--fs-body);line-height:var(--lh-body);
+  max-width:var(--measure)}
+.prose p + p{margin-top:1em}
+.lede{font-size:var(--fs-lede);line-height:var(--lh-body);color:var(--ink-2)}
+h2.h2{font-size:var(--fs-h2)}
+h3.h3{font-size:var(--fs-h3)}
+.eyebrow{font:var(--fs-micro)/var(--lh-fig) var(--mono);letter-spacing:var(--track-micro);text-transform:uppercase;color:var(--muted)}
+
+section{padding:clamp(32px,5.4vw,56px) 0;border-top:var(--lw-hair) solid var(--line)}
+section:first-of-type{border-top:0}
+.grid12{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(20px,2.2vw,32px);align-items:start}
+
+/* 元数据：旁注，12.5px 等宽，绝不与正文同大 */
+.meta{font:var(--fs-meta)/var(--lh-fig) var(--mono);color:var(--ink-2)}
+.meta dt{font-size:var(--fs-micro);letter-spacing:var(--track-micro);text-transform:uppercase;color:var(--muted)}
+.meta dd{margin:0 0 var(--sp-2);font-variant-numeric:tabular-nums}
+.meta dl{margin:0}
+aside.meta-col{border-top:var(--lw-hair) solid var(--ink);padding-top:var(--sp-3)}
+
+/* 图：一图一注，图注在图下，编号「图 1　说明」 */
+figure.fig{margin:0}
+figure.fig img{border:var(--lw-hair) solid var(--line)}
+figure.fig figcaption{
+  margin-top:var(--sp-2);font:var(--fs-fig)/var(--lh-fig) var(--sans);
+  letter-spacing:var(--track-fig);color:var(--muted);
+}
+figure.fig figcaption b{font-weight:400;color:var(--ink-2);margin-right:.5em}
+
+/* 档案页的书法展示位：作品 → 落款 → 图注，竖着排。
+   它是自述那一句「喜欢书法」的旁证，不是作品集，所以尺寸刻意压小
+   （桌面 208px、手机 190px 以内），全站只此一处。
+   图注按本文件既有的规矩放在图下（一图一注），不另起一栏 ——
+   208px 的图旁边挂四行小字会空出一大块，反而散。
+   图是透明底的 WebP，直接坐在纸面上 —— 加图廓线反而会框出一圈空白。 */
+figure.calli{margin-top:var(--sp-4)}
+figure.calli img{border:0;width:clamp(150px,24vw,208px)}
+/* 落款：站点唯一的毛笔字体（Ma Shan Zheng，见顶部 @font-face），只此一行。
+   字形都取自字体的 13 字子集，所以这四个字里没有一个会掉回系统字体。 */
+figure.calli .calli-sign{
+  margin-top:var(--sp-2);font-family:var(--brush);font-size:var(--fs-h2);
+  line-height:var(--lh-tight);letter-spacing:.08em;color:var(--ink-2);
+}
+figure.calli figcaption{margin-top:var(--sp-3);max-width:52em}
+
+/* 表：三线表。无竖线、无斑马纹、数值右对齐 + 等宽数字，单位写在表头，表注放 tfoot */
+table.data{width:100%;border-collapse:collapse;font:var(--fs-meta)/var(--lh-fig) var(--mono);color:var(--ink-2)}
+table.data caption{
+  caption-side:top;text-align:left;font:var(--fs-fig)/var(--lh-fig) var(--sans);
+  letter-spacing:var(--track-fig);color:var(--ink-2);padding-bottom:var(--sp-2);
+}
+table.data caption b{font-weight:400;color:var(--ink);margin-right:.5em}
+table.data th,table.data td{padding:var(--sp-2) var(--sp-3) var(--sp-2) 0;text-align:left;vertical-align:top}
+table.data thead th{border-top:var(--lw-rule) solid var(--ink);border-bottom:var(--lw-hair) solid var(--ink);
+  font-weight:400;color:var(--ink-2)}
+/* 收口线画在 tbody 这一层，不画在单元格上：app.js 给行首的 <th scope="row"> 带了
+   内联 style="border:0"，内联优先于样式表，画在单元格上会让首列缺一截、
+   三线表收不住口（tbody 自己的边不受单元格内联样式影响） */
+table.data tbody{border-bottom:var(--lw-rule) solid var(--ink)}
+table.data tbody th{font-weight:400;color:var(--ink-2)}
+/* 行首标签不折行：中文可以在任意字之间断行，标签列一断就成「标称分辨／率」这种读法 */
+table.data tbody th[scope="row"]{white-space:nowrap}
+table.data .num{text-align:right;font-variant-numeric:tabular-nums;padding-right:var(--sp-3)}
+table.data tfoot td{border:0;padding-top:var(--sp-2);font:var(--fs-fig)/var(--lh-fig) var(--sans);
+  letter-spacing:var(--track-fig);color:var(--muted)}
+table.data tfoot .tnote{white-space:pre-wrap}
+
+code{font:var(--fs-fig)/var(--lh-fig) var(--mono);color:var(--ink-2);background:var(--paper-2);
+  padding:2px var(--sp-1)}
+
+/* 降级：WebGL 不可用时换成构建期渲染的真实等高线版图，不是占位图 */
+.no-webgl .stage canvas{display:none}
+.no-webgl .stage .when-webgl{display:none}
+.stage .when-degraded{display:none}
+.no-webgl .stage .when-degraded{display:grid;place-items:center;height:100%;gap:var(--sp-2);
+  padding:var(--sp-4);text-align:center}
+
+footer.site{border-top:var(--lw-hair) solid var(--ink);padding:var(--sp-5) 0 var(--sp-6);margin-top:var(--sp-4)}
+footer.site .fine{font:var(--fs-micro)/var(--lh-fig) var(--mono);letter-spacing:var(--track-long);color:var(--muted)}
+
+h1.h1,.h1{font-size:var(--fs-h1);line-height:var(--lh-display);letter-spacing:var(--track-tight);font-family:var(--serif)}
+/* 标题不设 ch 上限：ch 是数字 0 的宽度，按它切会把中文标题切出一个孤字；
+   真正的边界交给 .plate-head 的 52em */
+.plate-head{max-width:52em}
+.plate-head h1{margin-top:var(--sp-2)}
+.plate-head .lede{margin-top:var(--sp-4)}
+.meta-line{
+  margin-top:var(--sp-3);font:var(--fs-meta)/var(--lh-fig) var(--mono);color:var(--muted);
+  letter-spacing:var(--track-meta);font-variant-numeric:tabular-nums;
+}
+.chips{margin-top:var(--sp-3);display:flex;flex-wrap:wrap;gap:var(--sp-2)}
+.chips span{
+  font:var(--fs-micro)/var(--lh-ui) var(--mono);letter-spacing:var(--track-micro);
+  border:var(--lw-hair) solid var(--line);padding:var(--sp-1) var(--sp-2);color:var(--ink-2);
+}
+/* 工作类型色标：只做边条与颜色，对比度全部 ≥4.5:1 */
+.dom-model{color:var(--dom-model);border-bottom:var(--lw-rule) solid var(--dom-model);padding-bottom:1px}
+.dom-remote{color:var(--dom-remote);border-bottom:var(--lw-rule) solid var(--dom-remote);padding-bottom:1px}
+.dom-field{color:var(--dom-field);border-bottom:var(--lw-rule) solid var(--dom-field);padding-bottom:1px}
+.dom-method{color:var(--dom-method);border-bottom:var(--lw-rule) solid var(--dom-method);padding-bottom:1px}
+
+.prose h2{margin-top:clamp(20px,3.4vw,32px)}
+.prose h2:first-child{margin-top:0}
+.prose h2 + p{margin-top:var(--sp-3)}
+ol.steps{margin:var(--sp-3) 0 0;padding:0;list-style:none;counter-reset:s}
+ol.steps li{
+  counter-increment:s;position:relative;padding-left:var(--sp-5);margin-top:var(--sp-3);
+  font-size:var(--fs-body);line-height:var(--lh-body);
+}
+ol.steps li::before{
+  content:counter(s);position:absolute;left:0;top:var(--sp-1);
+  width:var(--sp-4);height:var(--sp-4);display:grid;place-items:center;
+  border:var(--lw-hair) solid var(--ink-2);font:var(--fs-micro)/var(--lh-ui) var(--mono);color:var(--ink-2);
+}
+.dl{margin-top:var(--sp-4);font:var(--fs-meta)/var(--lh-fig) var(--mono)}
+.dl a{border-bottom:var(--lw-hair) solid var(--ink)}
+.xref{margin-top:var(--sp-3)}
+.xref a{border-bottom:var(--lw-hair) solid var(--ink)}
+ul.src{list-style:none;margin:var(--sp-2) 0 0;padding:0}
+ul.src li{
+  font:var(--fs-fig)/var(--lh-fig) var(--sans);letter-spacing:var(--track-fig);color:var(--muted);
+  padding-left:var(--sp-3);position:relative;margin-top:var(--sp-2);
+}
+ul.src li::before{content:'—';position:absolute;left:0;color:var(--muted)}
+.fine-note{
+  margin-top:clamp(32px,4vw,56px);padding-top:var(--sp-3);border-top:var(--lw-hair) solid var(--line);
+  font:var(--fs-fig)/var(--lh-fig) var(--sans);letter-spacing:var(--track-fig);color:var(--muted);max-width:52em;
+}
+
+/* 索引页：筛选条 + 表格 */
+.filterbar{
+  display:flex;flex-wrap:wrap;align-items:center;gap:0;
+  margin-top:clamp(20px,3vw,32px);border:var(--lw-hair) solid var(--line);width:fit-content;
+}
+.filterbar button{
+  appearance:none;background:none;border:0;border-right:var(--lw-hair) solid var(--line);
+  font:var(--fs-meta)/var(--lh-ui) var(--mono);letter-spacing:var(--track-meta);color:var(--muted);
+  padding:var(--sp-2) var(--sp-3);cursor:pointer;
+}
+.filterbar button:last-of-type{border-right:var(--lw-hair) solid var(--line)}
+.filterbar button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+/* 计数不加 opacity：4.61:1 的 --muted 打六折就掉到 2.3:1，那是文字不是装饰 */
+.filterbar button span{color:inherit;margin-left:var(--sp-1)}
+.filterbar .count{
+  padding:var(--sp-2) var(--sp-3);font:var(--fs-meta)/var(--lh-ui) var(--mono);color:var(--muted);
+  font-variant-numeric:tabular-nums;
+}
+.index-table{margin-top:clamp(20px,2.4vw,32px)}
+.index-table td .sub{
+  display:block;font:var(--fs-fig)/var(--lh-fig) var(--sans);letter-spacing:var(--track-fig);
+  color:var(--muted);margin-top:var(--sp-1);max-width:46em;
+}
+.index-table tbody tr[hidden]{display:none}
+.index-table td:nth-child(1){font-variant-numeric:tabular-nums;white-space:nowrap}
+.index-table td:nth-child(2){font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* 地图页：示意样地图层与它的开关 */
+.overlay{
+  position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
+}
+.layers .sep{width:var(--lw-hair);background:var(--line)}
+.toast{
+  position:absolute;left:50%;transform:translateX(-50%);bottom:var(--sp-6);
+  background:rgba(246,244,238,.96);border:var(--lw-hair) solid var(--ink-2);padding:var(--sp-2) var(--sp-3);
+  font:var(--fs-meta)/var(--lh-fig) var(--mono);color:var(--ink-2);pointer-events:none;
+  opacity:0;transition:opacity .3s;
+}
+.toast.on{opacity:1}
+
+/* ---------------------------------------------------------------- 断点 */
+/* 中等宽度：只收紧图例宽度。图层开关保持在图面顶部居中的绝对定位——
+   一旦改成 static，它会被 .inner 的 overflow:hidden 裁掉（手机上就再也切不了图层） */
+@media(max-width:1100px){
+  .legend{max-width:190px}
+}
+@media(max-width:820px){
+  :root{--measure:32em}
+  .stage{height:56vh;min-height:300px}
+  /* 顶栏改两行：品牌一行、导航一行左对齐，不再出现 logo 断字、导航错位 */
+  .topbar .in{flex-wrap:wrap;gap:var(--sp-2)}
+  .brand{width:100%}
+  .topbar nav{margin-left:0;width:100%;gap:var(--sp-2) var(--sp-4)}
+  /* 图层开关落到图面底部，排成 3+2 两行：宽度确定，不会撑破 390px */
+  .layers{
+    top:auto;bottom:var(--sp-2);left:var(--sp-2);right:var(--sp-2);transform:none;
+    display:grid;grid-template-columns:repeat(3,1fr);
+  }
+  .layers button{border-right:0;border-top:var(--lw-hair) solid var(--line);padding:var(--sp-2) var(--sp-1);text-align:center}
+  .layers button:nth-child(-n+3){border-top:0}
+  .layers button:nth-child(3n+2){border-left:var(--lw-hair) solid var(--line);border-right:var(--lw-hair) solid var(--line)}
+  .layers .sep{display:none}
+  /* 图例在手机上让位：131×237 的盒子会同时压住图层开关和读数框。
+     底边两条角注同样让位 —— 图层开关排在底边两行，正好落在它们身上 */
+  .legend{display:none}
+  .corner.sw,.corner.se{display:none}
+  .readout{bottom:76px;left:var(--sp-2);right:var(--sp-2);min-width:0}
+  .toast{bottom:216px;max-width:calc(100% - 32px)}
+  .scalebar{top:40px;left:var(--sp-2)}
+  .grid12{grid-template-columns:1fr}
+  .grid12 > *{grid-column:1 / -1 !important}
+  /* 书法展示位：手机上把作品再收一档，但图注仍在图下（上面那套竖排本来就不用改） */
+  figure.calli img{width:min(190px,58%)}
+}
+
+/* ---------------------------------------------------------------- 动效 */
+/* 流畅：锚点平滑 + 整页淡入。两者都在"减少动态效果"下关掉 */
+html{scroll-behavior:smooth}
+body{animation:pageIn .42s ease-out both}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+
+/* 入场只播一次：加 .in 之后就不再观察，不循环、不做视差 */
+[data-rise]{
+  opacity:0;transform:translateY(14px);
+  transition:opacity .62s cubic-bezier(.2,.8,.2,1),transform .62s cubic-bezier(.2,.8,.2,1);
+}
+[data-rise].in{opacity:1;transform:none}
+
+/* 减少动态效果：动画与过渡一律关闭（含指北针、提示条的过渡） */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  [data-rise]{opacity:1;transform:none}
+}
+
+/* ---------------------------------------------------------------- 打印 */
+/* ============================================================================
+   文档页版式（projects/*、projects/index.html、resume.html）
+   ----------------------------------------------------------------------------
+   这三页原来是「一个大标题 + 一列没有边界的散文」：页面没有主题色、正文没有落位、
+   读者三分钟里抓不到重点，也很难找到回首页/回作品的路。这一段补三件事：
+     · 主题：每页一个主色（--theme），只落在 2px 顶线、章节序号、翻页悬停上，
+       不做大面积填色 —— 底色仍是纸，主题只做记号。
+     · 约束：正文列固定 34em（一格汉字一个字，所以就是 34 个字的行长），
+       旁注走右侧窄栏，12 列网格里绝不放任一行拉满 1560px。
+     · 重点：每页一块「关键数字」或「记录框架」，只用页面里已有的数，不新造。
+   面包屑是本段的第四个作用：从首页点进作品之后，回得去。
+   ========================================================================== */
+
+/* 主题色：--theme 默认取方法灰，写 body 或单个条目上的 t-* 都能改 */
+:root{--theme:var(--dom-method)}
+.t-model{--theme:var(--dom-model)}
+.t-remote{--theme:var(--dom-remote)}
+.t-field{--theme:var(--dom-field)}
+.t-file{--theme:var(--dom-method)}
+
+/* 文档页容器比全站 .wide 收一档：1560px 上放 34em 正文加窄栏，两侧会空成两块 */
+.wide.doc-wide{max-width:68em}
+
+/* 面包屑：一条线，四段，最后一段是当前页；最右是「返回」 */
+.crumb{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--sp-2);
+  margin-top:var(--sp-4);
+  font:var(--fs-micro)/var(--lh-fig) var(--mono);letter-spacing:var(--track-micro);color:var(--muted);
+}
+.crumb a{border:0;color:var(--muted)}
+.crumb a:hover{color:var(--ink);border-bottom:var(--lw-hair) solid var(--ink)}
+/* 分隔符「/」虽然只是记号，但它是一段**可见文字**，验收照文字算对比度：
+   用 --rule(#c9c5b6) 上色只有 1.57:1，正是本文件开头那条「浅色只做线，不做字」踩过的坑
+   （V6 的 ul.src li::before 用 --rule 做符号就是 2.2:1）。所以这里取 --muted(5.9:1)，
+   想再淡就只能改成 CSS 画的线，不能再用浅色字。 */
+.crumb .sep{color:var(--muted)}
+.crumb .here{color:var(--ink-2)}
+.crumb .back{margin-left:auto;border-bottom:var(--lw-hair) solid var(--rule);color:var(--ink-2)}
+.crumb .back:hover{border-bottom-color:var(--ink)}
+
+/* 页头：一条主题色 2px 顶线，其余仍是纸 */
+.doc-head{border-top:var(--lw-rule) solid var(--theme);padding-top:var(--sp-4);margin-top:var(--sp-4);max-width:52em}
+.doc-head h1{margin-top:var(--sp-3)}
+.doc-head .lede{margin-top:var(--sp-3)}
+.doc-head .chips{margin-top:var(--sp-4)}
+
+/* 正文栏 + 旁注栏。桌面两列靠两端对齐，中间留白是版面而不是空隙 */
+.doc-grid{
+  display:grid;grid-template-columns:minmax(0,34em) minmax(0,22em);
+  gap:clamp(28px,4vw,72px);justify-content:space-between;align-items:start;
+  margin-top:clamp(32px,4.6vw,56px);
+}
+.doc-main{min-width:0}
+.doc-aside{position:sticky;top:calc(var(--sp-6) + var(--sp-4));min-width:0;max-width:22em}
+
+/* 章节：编号在左，标题在右，一条细线收头 */
+.blk{margin-top:clamp(32px,4.4vw,56px);padding-top:var(--sp-4);border-top:var(--lw-hair) solid var(--line)}
+.blk:first-child{margin-top:0;padding-top:0;border-top:0}
+.sec-h{display:flex;align-items:baseline;gap:var(--sp-3);font-size:var(--fs-h2);line-height:var(--lh-tight)}
+.sec-h .no{
+  flex:0 0 auto;font:var(--fs-micro)/var(--lh-ui) var(--mono);letter-spacing:var(--track-micro);
+  color:var(--theme);border-bottom:var(--lw-rule) solid var(--theme);padding-bottom:1px;
+}
+.sec-h + .prose,.sec-h + p,.sec-h + ol.steps,.sec-h + ul.src{margin-top:var(--sp-3)}
+.blk .prose h2{margin-top:clamp(20px,3.4vw,32px)}
+
+/* 关键数字：上下两条线夹一行数，数用等宽、标签 11px —— 不放进卡片，
+   卡片一多就又变回 PPT。数字本身是页面的「突出点」 */
+.figures{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(7em,1fr));gap:var(--sp-4);
+  margin-top:var(--sp-4);padding:var(--sp-3) 0;
+  border-top:var(--lw-rule) solid var(--theme);border-bottom:var(--lw-hair) solid var(--line);
+}
+/* 7em 是照最长的那一项定的：作品页最长是 0.28515625（10 个等宽字符 ≈ 115px），
+   34em 的正文栏里正好放得下四格（4×129px + 3×20px = 576px）。取 8em 会掉成 3 格，
+   第四个数被挤到第二行单独一个，看着像没排完；手机上 auto-fit 自己会收成两格。 */
+.figures div{min-width:0}
+.figures .v{
+  display:block;font:var(--fs-h2)/1.2 var(--mono);font-variant-numeric:tabular-nums;
+  letter-spacing:var(--track-tight);color:var(--ink);
+}
+.figures .k{display:block;margin-top:var(--sp-1);font:var(--fs-micro)/var(--lh-fig) var(--mono);
+  letter-spacing:var(--track-micro);color:var(--muted)}
+.figures-note{margin-top:var(--sp-2);font:var(--fs-fig)/var(--lh-fig) var(--sans);
+  letter-spacing:var(--track-fig);color:var(--muted);max-width:52em}
+
+/* 引一句原话当重点（档案页与作品页各一处，不多用） */
+.pull{
+  margin-top:var(--sp-5);padding-left:var(--sp-4);border-left:var(--lw-rule) solid var(--theme);
+  font-size:var(--fs-lede);line-height:var(--lh-body);color:var(--ink-2);max-width:26em;
+}
+
+/* 旁注卡：纸面再压一层的浅底，不是阴影盒子 */
+.side-card{border:var(--lw-hair) solid var(--line);background:var(--paper-2);padding:var(--sp-4)}
+.side-card + .side-card{margin-top:var(--sp-4)}
+.side-card > h2,.side-card > h3{margin-bottom:var(--sp-2)}
+.side-card .meta dt{margin-top:var(--sp-3)}
+.side-card .meta dt:first-of-type{margin-top:0}
+.side-card .chips{margin-top:var(--sp-2)}
+.side-card .chips span{background:var(--paper)}
+
+/* 翻页：上一件 / 全部作品 / 下一件。回不去的毛病在这里收掉 */
+.pager{
+  display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:var(--sp-4);
+  align-items:baseline;margin-top:clamp(32px,4.4vw,56px);padding-top:var(--sp-4);
+  border-top:var(--lw-rule) solid var(--ink);
+}
+.pager a{border:0}
+.pager .k{display:block;font:var(--fs-micro)/var(--lh-fig) var(--mono);
+  letter-spacing:var(--track-micro);color:var(--muted)}
+.pager .t{display:block;margin-top:var(--sp-1);font-size:var(--fs-h3);line-height:var(--lh-tight);color:var(--ink)}
+.pager a:hover .t{color:var(--theme)}
+.pager .next{text-align:right}
+.pager .all{text-align:center;font:var(--fs-meta)/var(--lh-fig) var(--mono);color:var(--ink-2);white-space:nowrap}
+.pager .all a{border-bottom:var(--lw-hair) solid var(--rule)}
+
+/* 作品总览：一行一件，序号 + 标题 + 一句说明，左边缘是这一件的分类色 */
+ul.worklist{list-style:none;margin:clamp(24px,3.4vw,40px) 0 0;padding:0;border-top:var(--lw-rule) solid var(--ink)}
+ul.worklist > li{border-bottom:var(--lw-hair) solid var(--line)}
+ul.worklist a{
+  display:grid;grid-template-columns:var(--sp-6) minmax(0,1fr);gap:var(--sp-4);
+  padding:var(--sp-4) 0 var(--sp-4) var(--sp-3);border:0;
+  border-left:var(--lw-rule) solid var(--theme);
+}
+ul.worklist .no{font:var(--fs-meta)/var(--lh-fig) var(--mono);letter-spacing:var(--track-meta);color:var(--muted)}
+ul.worklist .tt{display:block;font-size:var(--fs-h2);line-height:var(--lh-tight);color:var(--ink)}
+ul.worklist .dd{
+  display:block;margin-top:var(--sp-2);max-width:44em;
+  font-family:var(--sans);font-size:var(--fs-fig);line-height:var(--lh-fig);
+  letter-spacing:var(--track-fig);color:var(--muted);
+}
+ul.worklist .tag{
+  display:block;margin-top:var(--sp-3);
+  font:var(--fs-micro)/var(--lh-fig) var(--mono);letter-spacing:var(--track-micro);color:var(--theme);
+}
+ul.worklist a:hover .tt{color:var(--theme)}
+
+@media(max-width:820px){
+  .wide.doc-wide{max-width:var(--measure)}
+  .doc-grid{grid-template-columns:minmax(0,1fr);gap:var(--sp-5)}
+  .doc-aside{position:static;max-width:none}
+  .doc-head{margin-top:var(--sp-3)}
+  .crumb .back{margin-left:0}
+  .figures{grid-template-columns:repeat(auto-fit,minmax(7em,1fr));gap:var(--sp-3)}
+  .pager{grid-template-columns:minmax(0,1fr);gap:var(--sp-4)}
+  .pager .next{text-align:left}
+  .pager .all{text-align:left}
+  ul.worklist a{grid-template-columns:var(--sp-5) minmax(0,1fr)}
+}
+
+@media print{
+  /* 隐藏的只有导航与交互件：.chips 是技能标签，属于内容，打印要留 */
+  .topbar,.layers,.readout,.toast,.filterbar{display:none}
+  .crumb,.pager,.doc-aside{display:none}
+  .doc-grid{display:block}
+  .doc-main,.doc-aside{max-width:none}
+  body{background:#fff}
+  section{padding:var(--sp-4) 0}
+  .stage{height:180mm;min-height:0}
+  .grid12{display:block}
+  .grid12 > *{max-width:none !important}
+  .prose,.plate-head,.fine-note{max-width:none}
+  .plate,figure.fig,table.data,ol.steps li{break-inside:avoid}
+  table.data thead{display:table-header-group}
+  .fine{color:var(--ink-2)}
+  a{border-bottom:0;color:var(--ink)}
+}

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>找不到这一页｜lingyun · 图册</title>
+<meta name="description" content="这个地址在站里不存在。下面是首页、作品总览、三件作品、三维地形图与档案的入口。">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="atlas.css">
+<!-- 404 页不进搜索引擎：它本身没有内容，收录了只会让搜索结果里多一条死胡同。
+     注意这里**没有** og:* —— 分享一张 404 页出去不该有卡片。 -->
+<meta name="robots" content="noindex">
+</head>
+<body class="t-file">
+<main>
+<section class="shell">
+  <div class="wide doc-wide">
+
+    <p class="eyebrow" style="margin-top:var(--sp-6)">404 · 没有这一页</p>
+
+    <header class="doc-head" data-rise>
+      <h1 class="h1">这一页不在了</h1>
+      <p class="lede">地址打错了，或者这一页被搬走了。站里现在一共七页，下面都列出来了。</p>
+    </header>
+
+    <div class="prose" data-rise style="margin-top:var(--sp-5)">
+      <p>这个站一共七页：首页是一张用代码搭出来的三维书桌，往下滑，镜头会带你看过去；作品总览下面挂着三件做过的事 —— 冬小麦生长模拟、植被遥感指标分析、木札岭森林生态实习记录，外加一页能上手转、能读数的三维地形图；档案那页写的是方向、自述和我正在做的事。下面随便挑一个进去就行。</p>
+      <p>如果是你从别处点过来的链接，多半是个旧地址：这个站在 2026 年 10 月改过版，导航从旧的四项换成了「首页 / 作品 / 地形图 / 档案」，作品页现在都在 <code>/projects/</code> 下面，档案页还是 <code>/resume.html</code>。</p>
+    </div>
+
+    <!-- 这里刻意不放 .topbar nav：404 页不属于导航四项里的任何一项，
+         硬把某一项标成"当前页"是假的；所以改成一张把七个入口列全的清单。 -->
+    <ul class="worklist" data-rise>
+      <li class="t-file"><a href="index.html"><span class="no">首页</span><span><span class="tt">把一片林子读成一张图</span><span class="dd">用代码搭出来的三维书桌，滚轮驱动镜头。</span></span></a></li>
+      <li class="t-file"><a href="projects/index.html"><span class="no">作品</span><span><span class="tt">做过的事</span><span class="dd">四件的目录页，每件一句话。</span></span></a></li>
+      <li class="t-model"><a href="projects/wofost.html"><span class="no">01</span><span><span class="tt">基于 WOFOST 的冬小麦生长模拟</span><span class="dd">把天气、土壤、作物参数和农事管理组织成可续跑的情景模拟流程。</span></span></a></li>
+      <li class="t-remote"><a href="projects/remote.html"><span class="no">02</span><span><span class="tt">植被遥感指标与空间变化分析</span><span class="dd">从影像目录、日期与质量筛选开始，记录植被指标与候选掩膜。</span></span></a></li>
+      <li class="t-field"><a href="projects/field.html"><span class="no">03</span><span><span class="tt">木札岭森林生态实习记录</span><span class="dd">为实习照片、植物识别与生境观察建立统一的记录框架。</span></span></a></li>
+      <li class="t-file"><a href="terrain.html"><span class="no">04</span><span><span class="tt">木札岭样区三维地形图</span><span class="dd">真实 SRTM 高程，能转、能读数。</span></span></a></li>
+      <li class="t-file"><a href="resume.html"><span class="no">档案</span><span><span class="tt">lingyun</span><span class="dd">方向、自述、在做的事，以及那一笔书法。</span></span></a></li>
+    </ul>
+
+    <nav class="pager">
+      <span class="prev">
+        <span class="k">最直接的一步</span>
+        <a class="t" href="index.html">← 回首页</a>
+      </span>
+      <span class="all"><a href="projects/index.html">全部作品</a></span>
+      <span class="next">
+        <span class="k">能上手玩的一页</span>
+        <a class="t" href="terrain.html">木札岭样区三维地形图 →</a>
+      </span>
+    </nav>
+
+  </div>
+</section>
+</main>
+<footer class="site shell">
+  <div class="wide">
+    <p class="fine">
+      lingyun · PERSONAL ATLAS　内容更新 2026-10-25<br>
+      本站地图使用 SRTM 1 弧秒高程（NASA/USGS，公有领域，垂直基准 EGM96）；坡度、坡向、晕渲、等高线均由该数据计算，非实测。
+    </p>
+    <p class="fine" style="margin-top:10px">
+      <a href="index.html">首页</a>　·　<a href="projects/index.html">全部作品</a>　·　<a href="terrain.html">地形图</a>　·　<a href="resume.html">档案</a>
+    </p>
+  </div>
+</footer>
+<script src="app-shared.js"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+/* ============================================================================
+   scroll.css — 主页「滑动式丝滑」外壳
+   ----------------------------------------------------------------------------
+   只做三件事，别的都交给 atlas.css 的变量体系：
+     1) 一块全屏固定的 WebGL 舞台（canvas 不吃指针事件，绝不挡页面滚动）
+     2) 文字走在正常文档流里，用纸卡片浮在三维上
+     3) 顶上一条 2px 进度条，把"滚到哪儿了"说出来
+   变量与 atlas.css 对齐：正文 17px / 行高 1.85 / 行长 34em / 1.2 模数 / 小字加字距。
+   atlas.css 不改，需要覆盖的都在这里写。
+
+   配色跟着三维走：书桌现在是有地面、有雾的暖灰影棚（背景不是黑的），
+   所以首屏文字用墨色、压一层纸色薄雾，而不是"暗底亮字 + 黑纱"。
+   ========================================================================== */
+
+:root{
+  /* 与着色器 clearColor 同色：雾色(0.36,0.33,0.29)过完色调映射与 gamma ≈ #92908a */
+  --stage:#92908a;
+  --card-pad:clamp(20px,2.6vw,36px);
+  --card-bg:rgba(246,244,238,.94);
+  --card-w:min(calc(var(--measure) + 2 * var(--card-pad)),100%);
+  --vh1:calc(var(--vh,1vh) * 100);
+}
+
+html,body{background:var(--stage)}
+body.home{overflow-x:hidden}
+
+/* ---------------------------------------------------------------- 舞台 */
+.gl-wrap{
+  position:fixed;inset:0;z-index:0;height:var(--vh1);overflow:hidden;
+  background:var(--stage);
+}
+.gl-wrap canvas{
+  display:block;width:100%;height:100%;
+  /* 触屏：这一层不接任何指针事件，所以手势永远是给页面的滚动 ——
+     "拖镜头"和"滚页面"不会打架，往下滑就是推进（touch-action 一并声明，
+     即使将来给 canvas 挂事件也不会反客为主）。 */
+  pointer-events:none;touch-action:none;
+}
+.gl-note{
+  position:fixed;left:0;right:0;bottom:0;z-index:3;margin:0;
+  padding:10px clamp(16px,4vw,44px);
+  font:var(--fs-meta)/1.6 var(--mono);color:var(--ink-2);
+  background:rgba(246,244,238,.94);
+}
+.gl-note[hidden]{display:none}
+html.gl-failed .gl-wrap{display:none}
+html.gl-failed .progress-top{display:none}
+
+/* ---------------------------------------------------------------- 顶栏 */
+/* 压在全屏三维上：一开始透明（墨色字），滚过首屏再落回纸色（.solid），不做循环动画 */
+.home-top{position:fixed;top:0;left:0;right:0;background:transparent;border-bottom-color:transparent}
+.home-top .in{transition:background .28s ease,border-color .28s ease,color .28s ease}
+.home-top.solid{background:rgba(246,244,238,.94);border-bottom-color:var(--line);backdrop-filter:blur(6px)}
+.home-top nav a:hover{color:var(--ink)}
+
+/* ---------------------------------------------------------------- 正文流 */
+main{position:relative;z-index:1}
+.beat{
+  min-height:var(--vh1);display:flex;align-items:center;
+  padding:clamp(64px,10vh,120px) clamp(16px,4vw,44px);
+  border-top:0;
+}
+.beat-in{display:flex;width:100%}
+.beat-in.right{justify-content:flex-end}
+
+/* 首屏：全屏三维 + 左下角一句话。压一层纸色薄雾（不是黑纱）保证字读得清 */
+.hero{align-items:flex-end;padding-bottom:clamp(32px,9vh,110px);position:relative}
+.hero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:-1;
+  background:linear-gradient(to top,rgba(246,244,238,.9) 0%,rgba(246,244,238,.55) 32%,rgba(246,244,238,0) 68%);
+}
+.hero-in{width:100%}
+.hero .lede{color:var(--ink-2);margin-top:clamp(14px,2.4vh,22px);max-width:30em}
+.scroll-cue{
+  margin:clamp(18px,3.4vh,34px) 0 0;display:flex;align-items:center;gap:9px;
+  font:var(--fs-micro)/1 var(--mono);letter-spacing:.18em;color:var(--muted);
+  transition:opacity .4s ease;
+}
+.scroll-cue .bar{display:block;width:1px;height:30px;background:linear-gradient(rgba(20,21,15,.7),rgba(20,21,15,0))}
+html.scrolled .scroll-cue{opacity:0}
+
+/* ---------------------------------------------------------------- 卡片 */
+.card{
+  width:var(--card-w);
+  background:var(--card-bg);
+  -webkit-backdrop-filter:blur(16px) saturate(1.06);
+  backdrop-filter:blur(16px) saturate(1.06);
+  border:1px solid rgba(20,21,15,.18);
+  padding:var(--card-pad);
+  box-shadow:0 26px 70px rgba(38,30,20,.3);
+}
+.card h2{margin-top:6px}
+.card .prose{margin-top:16px}
+.eyebrow{color:var(--muted)}
+
+/* 作品：每条一句，标题 + 一句说明。左边缘是这一件的分类色（与作品页的主题色同一套）——
+   卡片是浮在三维上的纸，颜色只做记号，不做填色 */
+ul.works{list-style:none;margin:clamp(14px,2.4vh,22px) 0 0;padding:0}
+ul.works li{--theme:var(--dom-method);padding-left:12px;border-left:2px solid var(--theme)}
+ul.works li.t-model{--theme:var(--dom-model)}
+ul.works li.t-remote{--theme:var(--dom-remote)}
+ul.works li.t-field{--theme:var(--dom-field)}
+ul.works li.t-file{--theme:var(--dom-method)}
+ul.works li + li{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+ul.works a{display:block;border:0}
+ul.works .tt{display:block;font-size:var(--fs-h3);line-height:1.5}
+ul.works .dd{display:block;margin-top:5px;font:var(--fs-fig)/1.75 var(--sans);color:var(--muted)}
+ul.works a:hover .tt{color:var(--theme,var(--accent))}
+/* 「全部作品」：作品区唯一的出口，压在一条细线下面，不和条目抢位置 */
+.card .more{
+  margin-top:clamp(14px,2.2vh,20px);padding-top:14px;border-top:1px solid var(--line);
+  font:var(--fs-meta)/1.7 var(--mono);letter-spacing:var(--track-meta);
+}
+.card .more a{border-bottom:1px solid var(--rule)}
+.card .more a:hover{border-bottom-color:var(--ink)}
+
+/* 联系：只有三行，等宽数字列对齐 */
+dl.contact{margin:20px 0 0;display:grid;grid-template-columns:auto 1fr;gap:8px 20px}
+dl.contact dt{font:var(--fs-micro)/1.7 var(--mono);letter-spacing:.06em;color:var(--muted)}
+dl.contact dd{margin:0;font:var(--fs-meta)/1.7 var(--mono);color:var(--ink-2)}
+.card .dl{margin-top:22px;border-top:1px solid var(--line);padding-top:14px}
+
+/* ---------------------------------------------------------------- 页脚 */
+/* 主页原本有一条压在画面底边的说明带（三维静物怎么生成 + SRTM 来源）。
+   它落在全屏三维的最下沿，读者第一眼看到的是两行小字盖在静物上，画面被切掉一块；
+   而这两句在作品页与档案页的页脚各有一份，主页不必再重复。
+   所以 .home-foot 整块删除，主页以「联系」那一屏收尾，底边只留三维。 */
+
+/* ---------------------------------------------------------------- 进度条 */
+.progress-top{
+  position:fixed;top:0;left:0;right:0;height:2px;z-index:60;pointer-events:none;
+  background:rgba(20,21,15,.12);
+}
+.progress-top i{display:block;height:100%;width:calc(var(--p,0) * 100%);background:var(--accent)}
+
+/* ---------------------------------------------------------------- 窄屏 */
+/* 手机上卡片改成"从底部升起的纸片"：上半屏永远留给三维静物，
+   否则一张 34em 的卡片会占满整屏，主角就没了 */
+@media(max-width:820px){
+  :root{--card-w:100%}
+  .beat{align-items:flex-end;padding:74px clamp(14px,4vw,22px) clamp(24px,6vh,60px)}
+  .beat-in.right{justify-content:flex-start}
+  .home-top nav a{font-size:var(--fs-micro)}
+  .home-top nav{gap:12px}
+  .hero h1{font-size:clamp(26px,8vw,36px)}
+  .hero{padding-bottom:clamp(30px,7vh,72px)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .progress-top{display:none}
+  .scroll-cue{display:none}
+  .home-top .in{transition:none}
+}

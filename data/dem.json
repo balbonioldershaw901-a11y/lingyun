@@ -1,0 +1,53 @@
+{
+  "generated": "2026-10-25T11:23:03.993Z",
+  "generator": "prepare-dem.cjs",
+  "region": {
+    "south": 33.5,
+    "north": 34,
+    "west": 111.55,
+    "east": 112.05
+  },
+  "grid": {
+    "n": 1024,
+    "cellMetersEW": 45.24,
+    "cellMetersNS": 54.41,
+    "midLatitude": 33.75
+  },
+  "elevation": {
+    "min": 365,
+    "max": 2170,
+    "mean": 1006,
+    "voidsInCrop": 0
+  },
+  "contours": {
+    "intervalMeters": 100,
+    "indexIntervalMeters": 500,
+    "levels": 18,
+    "polylines": 1807
+  },
+  "quality": {
+    "source": "SRTM（航天飞机雷达地形测绘任务）1 弧秒",
+    "sourceUrl": "https://elevation-tiles-prod.s3.amazonaws.com/skadi/",
+    "provider": "NASA / USGS，经 AWS Open Data elevation-tiles-prod 分发",
+    "license": "公有领域（美国联邦政府作品，无使用限制）",
+    "acquisition": "SRTM 单次飞行采集于 2000 年 2 月；数据年龄约 25 年",
+    "nominalResolution": "1 弧秒（标称约 30 m）",
+    "effectiveResolution": "本区纬度 33.75° 下，1 弧秒实际为 25.7 m（东西）× 30.7 m（南北）。注意「1 弧秒 = 30 m」是粗说法，经纬度方向不等长",
+    "outputGrid": "1024×1024，像元 45.2 m（东西）× 54.4 m（南北），双线性重采样",
+    "horizontalDatum": "WGS84 / EPSG:4326",
+    "verticalDatum": "EGM96 大地水准面 —— 与 GPS 椭球高不是一回事，换算需大地水准面差距 N 值",
+    "surfaceType": "DSM（地表模型），不是 DTM。林区高程含植被冠层，温带林系统性偏高约 5–20 m，本站不做冠层校正",
+    "voids": "本区域四块瓦片抽样均未发现空洞（void=-32768），未做任何填补插值",
+    "accuracy": "SRTM 标称垂直精度 LE90 ≈ 16 m。这不是米级精度，页面上不得暗示高精度",
+    "processingChain": [
+      "大端 int16 解码（3601×3601，行北→南，列西→东）",
+      "双线性重采样到 1024² 规则网格，行 0 = 北",
+      "Horn 3×3 卷积求 p（东西）、q（南北）梯度，像元尺寸按经纬度分别计算",
+      "坡度 = atan(√(p²+q²))；坡向 = atan2(−p, −q)（下坡方向，0°=北、顺时针）",
+      "晕渲 = sin(alt)·cos(s) + cos(alt)·sin(s)·cos(az − aspect)，az=315°、alt=45°、z=1",
+      "等高线：marching squares，等高距 100 m，计曲线 500 m"
+    ],
+    "attribution": "SRTM 数据由 NASA/USGS 提供，属公有领域；本站直接引用，无需署名（仍标注来源）",
+    "disclaimer": "所有派生量（坡度、坡向、晕渲、等高线）都是算法产物，不是实测。地图上叠加的样地、样线等若为示意，必须单独标注为示意"
+  }
+}

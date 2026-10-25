@@ -1,0 +1,1 @@
+{"intervalMeters":100,"indexIntervalMeters":500,"levels":18,"polylines":1807,"labelsOnPlate":13,"note":"运行期等高线由片元着色器按 DEM 纹理实时计算，不下载折线数据"}

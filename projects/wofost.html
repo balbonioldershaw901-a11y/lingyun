@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>基于 WOFOST 的冬小麦生长模拟｜lingyun · 图册</title>
+<meta name="description" content="把天气、土壤、作物参数和农事管理组织成可追溯、可续跑的情景模拟流程。">
+<link rel="canonical" href="https://balbonioldershaw901-a11y.github.io/lingyun/projects/wofost.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="lingyun · 图册">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="基于 WOFOST 的冬小麦生长模拟｜lingyun · 图册">
+<meta property="og:description" content="把天气、土壤、作物参数和农事管理组织成可追溯、可续跑的情景模拟流程。">
+<meta property="og:url" content="https://balbonioldershaw901-a11y.github.io/lingyun/projects/wofost.html">
+<meta property="og:image" content="https://balbonioldershaw901-a11y.github.io/lingyun/assets/og-cover.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../atlas.css">
+</head>
+<body class="t-model">
+<header class="topbar">
+  <div class="in wide">
+    <a class="brand" href="../index.html"><i>LY</i>lingyun · 图册</a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="index.html" aria-current="page">作品</a>
+      <a href="../terrain.html">地形图</a>
+      <a href="../resume.html">档案</a>
+    </nav>
+  </div>
+</header>
+<main>
+<section class="shell">
+  <div class="wide doc-wide">
+
+    <nav class="crumb" aria-label="位置">
+      <a href="../index.html">首页</a>
+      <span class="sep">/</span>
+      <a href="index.html">作品</a>
+      <span class="sep">/</span>
+      <span class="here">冬小麦生长模拟</span>
+      <a class="back" href="index.html">← 全部作品</a>
+    </nav>
+
+    <header class="doc-head" data-rise>
+      <p class="eyebrow">图幅 01 · 作物生长模拟</p>
+      <h1 class="h1">基于 WOFOST 的冬小麦生长模拟</h1>
+      <p class="lede">把天气、土壤、作物参数和农事管理组织成可追溯、可续跑的情景模拟流程。</p>
+      <p class="chips"><span>PCSE</span><span>Python</span><span>WOFOST</span></p>
+    </header>
+
+    <div class="doc-grid">
+      <div class="doc-main">
+
+        <div class="blk" data-rise>
+          <h2 class="sec-h"><span class="no">01</span>背景</h2>
+          <div class="prose">
+            <p>冬小麦生长受天气、土壤、品种参数和播期共同影响。这个项目以已有论文的方法为参考，整理多情景输入与模拟输出，从数据准备一直做到模型执行。</p>
+            <p>模型跑在 PCSE 6.0.12 上（Wofost72_PP 与 Wofost72_WLP_FD）。天气用 NASA POWER 替代数据，范围是 20 个站点、2001—2015 收获年；情景包含 32 组作物参数、3 种播期、3 种适配土壤和 2 种生产模式。</p>
+          </div>
+        </div>
+
+        <div class="blk" data-rise>
+          <h2 class="sec-h"><span class="no">02</span>我做了什么</h2>
+          <ol class="steps">
+            <li>核对天气日期、单位及模型需要的输入字段，保留输入来源。</li>
+            <li>用官方输入链构建参数，先进行历史结果兼容检查。</li>
+            <li>完成并行一致性检查与小规模试算，再执行全量任务。</li>
+            <li>按「站点 × 收获年」保存分片，核对清单、主键和快照完整性。</li>
+          </ol>
+          <div class="figures">
+            <div><span class="v">172,800</span><span class="k">情景设计</span></div>
+            <div><span class="v">115,200</span><span class="k">实际执行</span></div>
+            <div><span class="v">300</span><span class="k">保存分片</span></div>
+            <div><span class="v">0</span><span class="k">审计失败记录</span></div>
+          </div>
+          <div class="prose">
+            <p>PP 模式不依赖土壤标签，28,800 次 PP 执行映射到三种土壤设计；WLP 实际执行 86,400 次。</p>
+          </div>
+          <p class="figures-note">这四行是模型的计算规模，不是实测田间样本数。</p>
+        </div>
+
+        <div class="blk" data-rise>
+          <h2 class="sec-h"><span class="no">03</span>现在</h2>
+          <div class="prose">
+            <p>流程已经跑通，还在等合格的田间产量、LAI 或物候观测，用来看这套模拟在真实条件下站不站得住。在那之前，上面的数字只说明「跑得完、跑得对」，不说明「算得准」。</p>
+          </div>
+        </div>
+
+      </div>
+
+      <aside class="doc-aside">
+        <div class="side-card" data-rise>
+          <h3 class="h3">概况</h3>
+          <dl class="meta">
+            <dt>图幅</dt>
+            <dd>01 / 共 4</dd>
+            <dt>类别</dt>
+            <dd>作物生长模拟</dd>
+            <dt>模型</dt>
+            <dd>PCSE 6.0.12<br>Wofost72_PP<br>Wofost72_WLP_FD</dd>
+            <dt>天气</dt>
+            <dd>NASA POWER 替代数据</dd>
+            <dt>范围</dt>
+            <dd>20 站点 × 2001—2015 收获年</dd>
+            <dt>更新</dt>
+            <dd>2026-10-25</dd>
+          </dl>
+        </div>
+        <div class="side-card" data-rise>
+          <h3 class="h3">阅读提示</h3>
+          <p class="meta" style="margin:0">「我做了什么」下面那四行数，是这套输入跑出来的计算规模。它衡量的是流程完整性，不是产量精度 —— 精度差在缺实测数据，写在「现在」里。</p>
+        </div>
+      </aside>
+    </div>
+
+    <nav class="pager">
+      <span class="prev">
+        <span class="k">回到</span>
+        <a class="t" href="index.html">← 全部作品</a>
+      </span>
+      <span class="all"><a href="../index.html">首页</a></span>
+      <span class="next">
+        <span class="k">下一件 · 02</span>
+        <a class="t" href="remote.html">植被遥感指标与空间变化分析 →</a>
+      </span>
+    </nav>
+
+  </div>
+</section>
+</main>
+<footer class="site shell">
+  <div class="wide">
+    <p class="fine">
+      lingyun · PERSONAL ATLAS　内容更新 2026-10-25<br>
+      本站地图使用 SRTM 1 弧秒高程（NASA/USGS，公有领域，垂直基准 EGM96）；坡度、坡向、晕渲、等高线均由该数据计算，非实测。
+    </p>
+    <p class="fine" style="margin-top:10px">
+      <a href="../index.html">首页</a>　·　<a href="index.html">全部作品</a>　·　<a href="../terrain.html">地形图</a>　·　<a href="../resume.html">档案</a>
+    </p>
+  </div>
+</footer>
+<script src="../app-shared.js"></script>
+</body>
+</html>

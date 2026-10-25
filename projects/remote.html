@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>植被遥感指标与空间变化分析｜lingyun · 图册</title>
+<meta name="description" content="从影像目录、日期与质量筛选开始，记录植被指标、候选掩膜和特征对齐过程。">
+<link rel="canonical" href="https://balbonioldershaw901-a11y.github.io/lingyun/projects/remote.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="lingyun · 图册">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="植被遥感指标与空间变化分析｜lingyun · 图册">
+<meta property="og:description" content="从影像目录、日期与质量筛选开始，记录植被指标、候选掩膜和特征对齐过程。">
+<meta property="og:url" content="https://balbonioldershaw901-a11y.github.io/lingyun/projects/remote.html">
+<meta property="og:image" content="https://balbonioldershaw901-a11y.github.io/lingyun/assets/og-cover.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../atlas.css">
+</head>
+<body class="t-remote">
+<header class="topbar">
+  <div class="in wide">
+    <a class="brand" href="../index.html"><i>LY</i>lingyun · 图册</a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="index.html" aria-current="page">作品</a>
+      <a href="../terrain.html">地形图</a>
+      <a href="../resume.html">档案</a>
+    </nav>
+  </div>
+</header>
+<main>
+<section class="shell">
+  <div class="wide doc-wide">
+
+    <nav class="crumb" aria-label="位置">
+      <a href="../index.html">首页</a>
+      <span class="sep">/</span>
+      <a href="index.html">作品</a>
+      <span class="sep">/</span>
+      <span class="here">植被遥感指标</span>
+      <a class="back" href="index.html">← 全部作品</a>
+    </nav>
+
+    <header class="doc-head" data-rise>
+      <p class="eyebrow">图幅 02 · 遥感与空间分析</p>
+      <h1 class="h1">植被遥感指标与空间变化分析</h1>
+      <p class="lede">从影像目录、日期与质量筛选开始，记录植被指标、候选掩膜和特征对齐过程。</p>
+      <p class="chips"><span>Sentinel-2</span><span>NDVI</span><span>LAI</span></p>
+    </header>
+
+    <div class="doc-grid">
+      <div class="doc-main">
+
+        <div class="blk" data-rise>
+          <h2 class="sec-h"><span class="no">01</span>背景</h2>
+          <div class="prose">
+            <p>把遥感植被信息接到模型之前，得先确认影像身份、观测日期、质量和空间范围是一致的。这个项目记录 Sentinel-2 植被指标处理与候选冬小麦区域的构建过程。</p>
+            <p>材料来自 Sentinel-2 影像目录、NDVI 与 Otsu 阈值审计、特征配对记录。GEE 与 ArcGIS 是接下来做数据处理和地图表达的方向。</p>
+            <p>这一步不涉及新算法，只是把「哪一景、哪一天、哪一块」对齐。对不齐，后面算出来的指标就没有可比性，掩膜再好看也不能用。</p>
+          </div>
+        </div>
+
+        <div class="blk" data-rise>
+          <h2 class="sec-h"><span class="no">02</span>我做了什么</h2>
+          <ol class="steps">
+            <li>核对影像目录、在线日期和产品身份。</li>
+            <li>筛选影像质量，组织 NDVI 栈。</li>
+            <li>运行 Otsu 阈值处理，保存阈值与候选像元统计。</li>
+            <li>配对后续特征，并将地面验证设为单独关口。</li>
+          </ol>
+          <div class="figures">
+            <div><span class="v">24</span><span class="k">在线影像日期</span></div>
+            <div><span class="v">14</span><span class="k">云量低于 10%</span></div>
+            <div><span class="v">0.28515625</span><span class="k">这批输入的 Otsu 阈值</span></div>
+            <div><span class="v">0</span><span class="k">独立验证样点</span></div>
+          </div>
+          <div class="prose">
+            <p>候选掩膜已经生成，特征配对也通过了。阈值这一列是这批输入算出来的，换区域或换年份不能直接搬用。</p>
+          </div>
+          <p class="figures-note">最后那个 0 不是没做，是这一步还没拿到可以独立复核的样点或标签 —— 它决定了下面「现在」那一段怎么写。</p>
+        </div>
+
+        <div class="blk" data-rise>
+          <h2 class="sec-h"><span class="no">03</span>现在</h2>
+          <div class="prose">
+            <p>指标和掩膜都做出来了，还缺独立样点或可靠标签来复核，所以现在还不能说这是验证过的冬小麦分布。这句话不是客气 —— 没有这一步，掩膜看着再干净也只是候选。</p>
+          </div>
+        </div>
+
+      </div>
+
+      <aside class="doc-aside">
+        <div class="side-card" data-rise>
+          <h3 class="h3">概况</h3>
+          <dl class="meta">
+            <dt>图幅</dt>
+            <dd>02 / 共 4</dd>
+            <dt>类别</dt>
+            <dd>遥感与空间分析</dd>
+            <dt>影像</dt>
+            <dd>Sentinel-2</dd>
+            <dt>指标</dt>
+            <dd>NDVI、LAI</dd>
+            <dt>方法</dt>
+            <dd>Otsu 阈值 · 特征配对</dd>
+            <dt>下一步</dt>
+            <dd>GEE、ArcGIS</dd>
+            <dt>更新</dt>
+            <dd>2026-10-25</dd>
+          </dl>
+        </div>
+        <div class="side-card" data-rise>
+          <h3 class="h3">一句话结论</h3>
+          <p class="meta" style="margin:0">掩膜是候选，不是结论。缺的那一步写在「现在」里，没有绕过去。</p>
+        </div>
+      </aside>
+    </div>
+
+    <nav class="pager">
+      <span class="prev">
+        <span class="k">上一件 · 01</span>
+        <a class="t" href="wofost.html">← 冬小麦生长模拟</a>
+      </span>
+      <span class="all"><a href="index.html">全部作品</a></span>
+      <span class="next">
+        <span class="k">下一件 · 03</span>
+        <a class="t" href="field.html">木札岭森林生态实习记录 →</a>
+      </span>
+    </nav>
+
+  </div>
+</section>
+</main>
+<footer class="site shell">
+  <div class="wide">
+    <p class="fine">
+      lingyun · PERSONAL ATLAS　内容更新 2026-10-25<br>
+      本站地图使用 SRTM 1 弧秒高程（NASA/USGS，公有领域，垂直基准 EGM96）；坡度、坡向、晕渲、等高线均由该数据计算，非实测。
+    </p>
+    <p class="fine" style="margin-top:10px">
+      <a href="../index.html">首页</a>　·　<a href="index.html">全部作品</a>　·　<a href="../terrain.html">地形图</a>　·　<a href="../resume.html">档案</a>
+    </p>
+  </div>
+</footer>
+<script src="../app-shared.js"></script>
+</body>
+</html>

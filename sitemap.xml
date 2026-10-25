@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 站点地图。域名与日期由 set-domain.cjs 写入：node set-domain.cjs 你的域名
+     页面清单以「磁盘上真实的 7 个内容页」为准；desk/index.html 是首页用的三维场景，
+     不是给人直接读的内容页，所以不收进来。新增页面时这里也要加一条。 -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://balbonioldershaw901-a11y.github.io/lingyun/</loc><lastmod>2026-10-25</lastmod><priority>1.0</priority></url>
+  <url><loc>https://balbonioldershaw901-a11y.github.io/lingyun/projects/index.html</loc><lastmod>2026-10-25</lastmod></url>
+  <url><loc>https://balbonioldershaw901-a11y.github.io/lingyun/projects/wofost.html</loc><lastmod>2026-10-25</lastmod></url>
+  <url><loc>https://balbonioldershaw901-a11y.github.io/lingyun/projects/remote.html</loc><lastmod>2026-10-25</lastmod></url>
+  <url><loc>https://balbonioldershaw901-a11y.github.io/lingyun/projects/field.html</loc><lastmod>2026-10-25</lastmod></url>
+  <url><loc>https://balbonioldershaw901-a11y.github.io/lingyun/terrain.html</loc><lastmod>2026-10-25</lastmod></url>
+  <url><loc>https://balbonioldershaw901-a11y.github.io/lingyun/resume.html</loc><lastmod>2026-10-25</lastmod></url>
+</urlset>

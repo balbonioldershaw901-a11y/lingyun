@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>木札岭样区三维地形图｜lingyun · 图册</title>
+<meta name="description" content="以 SRTM 真实高程数据绘制的木札岭样区三维地形图幅：分层设色、100 米等高线、坡度与坡向，含数据质量声明与剖面。">
+<link rel="canonical" href="https://balbonioldershaw901-a11y.github.io/lingyun/terrain.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="lingyun · 图册">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="木札岭样区三维地形图｜lingyun · 图册">
+<meta property="og:description" content="以 SRTM 真实高程数据绘制的三维地形图幅：分层设色、100 米等高线、坡度与坡向，能转、能读数。">
+<meta property="og:url" content="https://balbonioldershaw901-a11y.github.io/lingyun/terrain.html">
+<meta property="og:image" content="https://balbonioldershaw901-a11y.github.io/lingyun/assets/og-cover.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="atlas.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="in wide">
+    <a class="brand" href="index.html"><i>LY</i>lingyun · 图册</a>
+    <nav>
+      <a href="index.html">首页</a>
+      <a href="projects/index.html">作品</a>
+      <a href="terrain.html" aria-current="page">地形图</a>
+      <a href="resume.html">档案</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================================================ 图幅 -->
+<section id="map" class="shell">
+  <div class="wide">
+    <!-- 这一页也是「作品」里的第 04 件，所以先给一条回得去的路：
+         面包屑指到作品总览，编号与作品列表里的 04 对齐（原来写的是 01，和列表对不上）。 -->
+    <nav class="crumb" aria-label="位置">
+      <a href="index.html">首页</a>
+      <span class="sep">/</span>
+      <a href="projects/index.html">作品</a>
+      <span class="sep">/</span>
+      <span class="here">三维地形图</span>
+      <a class="back" href="projects/index.html">← 全部作品</a>
+    </nav>
+    <p class="eyebrow">图幅 04｜木札岭样区</p>
+    <h1 class="h1" style="margin-top:8px">木札岭样区三维地形图</h1>
+
+    <div class="plate">
+      <div class="inner">
+        <div class="stage">
+          <canvas id="map-canvas" aria-label="木札岭样区三维地形图，可拖动旋转、滚轮缩放"></canvas>
+          <canvas class="overlay" id="overlay" aria-hidden="true"></canvas>
+          <!-- 没有 WebGL 时：换成构建期用同一份 DEM 渲染的真实等高线版图，不是占位图 -->
+          <div class="when-degraded">
+            <img class="fallback" src="data/contour-plate.webp" width="1024" height="1024"
+                 alt="木札岭样区等高线地形图（静态版），等高距 100 米，计曲线 500 米">
+            <p id="degrade-note" class="meta">三维地图未启用，下方仍为同一份数据渲染的等高线图幅。</p>
+          </div>
+
+          <div class="layers" id="layers" role="group" aria-label="图层切换">
+            <button data-layer="elevation" aria-pressed="true">分层设色</button>
+            <button data-layer="slope" aria-pressed="false">坡度</button>
+            <button data-layer="aspect" aria-pressed="false">坡向</button>
+            <button data-layer="grey" aria-pressed="false">单色晕渲</button>
+            <span class="sep"></span>
+            <button data-toggle="plots" aria-pressed="false">样地（示意）</button>
+          </div>
+
+          <div class="toast" id="toast"></div>
+
+          <span class="corner nw"></span>
+          <span class="corner ne"></span>
+          <span class="corner sw"></span>
+          <span class="corner se"></span>
+
+          <div class="compass" id="compass" aria-hidden="true">
+            <svg class="rose" viewBox="0 0 52 52" width="52" height="52">
+              <polygon points="26,6 31,30 26,26 21,30" fill="#3a3b32"/>
+              <polygon points="26,46 21,30 26,34 31,30" fill="none" stroke="#6d7062" stroke-width="1"/>
+              <text x="26" y="52" font-size="10" text-anchor="middle" fill="#3a3b32"
+                    font-family="ui-monospace,monospace">N</text>
+            </svg>
+          </div>
+
+          <div class="scalebar" id="scalebar">
+            <div class="bar"><i style="width:50%"></i><i style="width:50%"></i></div>
+            <div class="lbl"><span>0</span><span>—</span></div>
+            <!-- 比例尺由 app.js 量出后填入；降级（无 WebGL）时不显示伪造的档位 -->
+            <div id="scale-note" class="meta">比例尺随三维视图计算</div>
+          </div>
+
+          <div class="legend" id="legend"></div>
+
+          <div class="readout" id="readout">
+            <div class="vals meta">指向图面以读取坐标</div>
+            <div class="hint">读数取自与图面同一份 SRTM 栅格；高程为 DSM，含植被冠层，垂直精度约 ±16 m。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="plate-title">
+        <div>
+          <span class="no">图幅 01／共 01 幅</span>
+          <h2>木札岭样区地形与派生图层</h2>
+        </div>
+        <div class="meta">
+          <dl>
+            <dt>比例尺</dt><dd id="scale-num">随视图变化</dd>
+            <dt>投影</dt><dd>WGS84 经纬度（等距圆柱近似）</dd>
+            <dt>渲染帧</dt><dd id="frames">0</dd>
+          </dl>
+        </div>
+      </div>
+
+      <p class="plate-src" id="src-line">数据加载中…</p>
+    </div>
+
+    <div class="grid12" style="margin-top:clamp(20px,3vw,40px)">
+      <div class="prose" style="grid-column:1 / span 6">
+        <p>这是一张能核对的地形图，不是氛围背景。它由 SRTM 1 弧秒高程数据绘制：
+           区域范围、像元尺寸、垂直基准、精度指标都写在下方表格里。</p>
+        <p>图面上的比例尺、指北针与读数都是实时算出来的，不是画上去的装饰。
+           三维视图里比例尺随位置变化，所以它标明自己标的是哪一点 —— 图面中心；
+           指北针随相机方向转动；指针读数与着色器用的是同一份栅格，可以反查。</p>
+      </div>
+      <aside class="meta-col" style="grid-column:8 / span 5" aria-labelledby="layer-note">
+        <h3 class="h3" id="layer-note">怎么用</h3>
+        <div class="meta" style="margin-top:10px">
+          <dl>
+            <dt>旋转</dt><dd>按住拖动</dd>
+            <dt>缩放</dt><dd>滚轮或双指</dd>
+            <dt>读数</dt><dd>移动指针，右下角显示经纬度／高程／坡度／坡向</dd>
+            <dt>图层</dt><dd>图面顶部切换分层设色／坡度／坡向／单色晕渲</dd>
+            <dt>垂直夸张</dt><dd><input id="vexag" type="range" min="0.6" max="2.5" step="0.1" value="1"
+                aria-label="垂直夸张"> <span id="vexag-out" style="font-variant-numeric:tabular-nums">×1.0</span></dd>
+            <dt>视角</dt><dd><button id="reset-view" type="button">复位</button>
+              <button id="top-view" type="button">正射俯视</button></dd>
+          </dl>
+          <p style="margin-top:10px">垂直夸张只改显示，不改数据。图面上任何高程读数都按真实值给出。</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 数据质量 -->
+<section id="quality" class="shell">
+  <div class="wide">
+    <p class="eyebrow">数据质量声明</p>
+    <h2 class="h2" style="margin-top:6px">每一项都写在图上</h2>
+    <div class="grid12" style="margin-top:clamp(18px,2.6vw,36px)">
+      <div style="grid-column:1 / span 7">
+        <table class="data" id="quality-table">
+          <caption><b>表 1</b>　木札岭样区地形数据的来源与质量</caption>
+          <tbody></tbody>
+          <tfoot><tr><td colspan="2" class="tnote">空白与填补：本区域四块瓦片抽样均未发现空洞，未做任何插值填补。
+真实 DEM ≠ 真实地面：SRTM 为 DSM，林区高程含植被冠层，温带林系统性偏高约 5–20 m，本站不做冠层校正。
+每个像素的来历分四层：原始观测／空洞填补／算法派生／装饰着色 —— 本图为原始观测 + 算法派生，无填补。</td></tr></tfoot>
+        </table>
+      </div>
+      <div style="grid-column:9 / span 4">
+        <table class="data" id="stats-table">
+          <caption><b>表 2</b>　样区数值概览</caption>
+          <tbody></tbody>
+          <tfoot><tr><td colspan="2" class="tnote">像元东西与南北不等长 —— 1 弧秒在 33.75°N 并不是 30 m。
+所有派生量（坡度、坡向、晕渲、等高线）都是算法产物，不是实测。</td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 剖面 -->
+<section id="profile" class="shell">
+  <div class="wide">
+    <p class="eyebrow">剖面</p>
+    <h2 class="h2" style="margin-top:6px">A–A′ 地形剖面</h2>
+    <div class="prose" style="margin-top:14px">
+      <p>沿样区中纬线自西向东切一刀，看这条线上地面高度的变化 —— 山脊与河谷在图上是两个方向相反的折点。</p>
+    </div>
+    <figure class="fig" style="margin-top:clamp(16px,2.4vw,32px);max-width:1100px">
+      <svg id="profile-svg" viewBox="0 0 1000 190" width="100%" height="190"
+           role="img" aria-label="沿样区中纬线自西向东的地形剖面"></svg>
+      <figcaption id="profile-cap"><b>图 2</b>　剖面加载中…</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================================================ 方法 -->
+<section id="method" class="shell">
+  <div class="wide">
+    <p class="eyebrow">方法</p>
+    <h2 class="h2" style="margin-top:6px">这张图是怎么算出来的</h2>
+    <div class="grid12" style="margin-top:clamp(18px,2.6vw,36px)">
+      <div class="prose" style="grid-column:1 / span 6">
+        <h3 class="h3">处理链</h3>
+        <ol class="steps">
+          <li>下载 SRTM <code>.hgt.gz</code> 瓦片，校验解压尺寸是否为 3601×3601×2。</li>
+          <li>按大端序逐字节合成 int16 —— 用小端读会得到 ±3 万米的鬼值，而且不报错。</li>
+          <li>双线性重采样到 1024² 规则网格，行 0 为北；像元尺寸按经纬度分别计算。</li>
+          <li>Horn 3×3 卷积求梯度：<code>p</code> 为东西向、<code>q</code> 为南北向。</li>
+          <li>坡度 = <code>atan(√(p²+q²))</code>；坡向 = <code>atan2(−p, −q)</code>（下坡方向，0° 为北、顺时针）。</li>
+          <li>晕渲 = <code>sin(alt)·cos(s) + cos(alt)·sin(s)·cos(az − aspect)</code>，光源 315°／45°。</li>
+          <li>等高线与经纬网在着色器里由高程纹理实时计算：等高距 100 m，计曲线 500 m，经纬网 5′。</li>
+        </ol>
+
+        <table class="data" style="margin-top:28px">
+          <caption><b>表 3</b>　处理链：每一步的输入与输出</caption>
+          <thead><tr><th>步骤</th><th>输入</th><th>输出</th></tr></thead>
+          <tbody>
+            <tr><td>取瓦片</td><td>.hgt.gz，3601×3601，大端 int16</td><td>高程场（米，EGM96）</td></tr>
+            <tr><td>重采样</td><td>不规则经纬网点</td><td>1024² 规则网格，行 0 为北</td></tr>
+            <tr><td>梯度</td><td>3×3 窗口，像元尺寸分东西南北</td><td>p（东西）、q（南北）</td></tr>
+            <tr><td>坡度／坡向</td><td>p、q</td><td>坡度角、下坡方位角</td></tr>
+            <tr><td>晕渲</td><td>坡度、坡向、光源 315°／45°</td><td>0–1 明暗系数</td></tr>
+            <tr><td>等高线</td><td>高程场、等高距 100 m</td><td>折线 + 计曲线 + 高程注记</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="3" class="tnote">派生量全部在构建期算好（prepare-dem.cjs），运行期只做查表与双线性插值。
+坡度与坡向是两个独立派生量，不互为输入。</td></tr></tfoot>
+        </table>
+
+        <p class="fine-note">两个容易画错的地方：坡向公式的参数顺序写反，会把晕渲明暗整个翻过来，山被读成坑而图看起来依然像山；
+          等高距必须与图面比例匹配，本区平均坡度约 21.6°、像元约 50 m，取 25 m 会让线糊成一片，100 m 才是这张图能读的间距。</p>
+      </div>
+      <aside class="meta-col" style="grid-column:8 / span 5" aria-labelledby="files-note">
+        <h3 class="h3" id="files-note">可复现的文件</h3>
+        <div class="meta" style="margin-top:10px">
+          <dl>
+            <dt>数据管线</dt><dd>prepare-dem.cjs</dd>
+            <dt>公式自检</dt><dd>test-dem-math.cjs</dd>
+            <dt>图层转码</dt><dd>prepare-webp.cjs（高程图保无损）</dd>
+            <dt>元数据</dt><dd>data/dem.json</dd>
+            <dt>剖面数据</dt><dd>data/profile.json</dd>
+          </dl>
+          <p style="margin-top:12px">高程纹理必须无损：有损 WebP 走 YUV 4:2:0，R 与 B 落在色度平面会被降到半分辨率，
+          而这两个字节正好携带高程的低位 —— 用有损图会让读数漂移。</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site shell">
+  <div class="wide">
+    <p class="fine">
+      高程数据：SRTM 1 弧秒（NASA / USGS），公有领域，经 AWS Open Data elevation-tiles-prod 分发，垂直基准 EGM96。<br>
+      图中所有派生图层（坡度、坡向、晕渲、等高线）由本站脚本从上述数据计算，非实测。本站不做冠层校正，不宣称米级精度。<br>
+      样区范围 33.50–34.00°N／111.55–112.05°E。地图上的样地若为示意，已在图例与提示条里单独标注。
+    </p>
+    <p class="fine" style="margin-top:10px">
+      <a href="index.html">首页</a>　·　<a href="projects/index.html">全部作品</a>　·　<a href="resume.html">档案</a>
+    </p>
+  </div>
+</footer>
+
+<script src="map3d.js"></script>
+<script src="app.js"></script>
+<script src="app-shared.js"></script>
+</body>
+</html>
